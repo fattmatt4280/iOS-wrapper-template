@@ -7,16 +7,6 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - name: Notify Lovable (Started)
-        run: |
-          curl -X POST https://your-lovable-project-url.lovable.app/functions/v1/build-webhook \
-          -H "Content-Type: application/json" \
-          -H "Authorization: Bearer ${{ secrets.BUILD_WEBHOOK_SECRET }}" \
-          -d '{"build_id": "${{ github.event.client_payload.build_id }}", "status": "processing"}'
-
-          - name: Checkout Repository
-          uses: actions/checkout@v4
-
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -27,7 +17,7 @@ jobs:
         run: |
             bundle install
             bundle exec fastlane beta
-            
+
       - name: Notify Lovable (Success)
         if: success()
         run: |
