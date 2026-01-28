@@ -14,10 +14,18 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.BUILD_WEBHOOK_SECRET }}" \
           -d '{"build_id": "${{ github.event.client_payload.build_id }}", "status": "processing"}'
 
-      - name: Build and Upload
-        run: echo "Building Budder Buddy..."
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
 
-      - name: Notify Lovable (Success)
+      - name: Build and Upload iOS no App
+        run: |
+            bundle install
+            bundle exec fastlane beta
+
+            - name: Notify Lovable (Success)
         if: success()
         run: |
           curl -X POST https://your-lovable-project-url.lovable.app/functions/v1/build-webhook \
