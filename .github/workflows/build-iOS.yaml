@@ -1,0 +1,26 @@
+name: Build iOS App
+on:
+  repository_dispatch:
+    types: [build-ios-app]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Notify Lovable (Started)
+        run: |
+          curl -X POST https://your-lovable-project-url.lovable.app/functions/v1/build-webhook \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer ${{ secrets.BUILD_WEBHOOK_SECRET }}" \
+          -d '{"build_id": "${{ github.event.client_payload.build_id }}", "status": "processing"}'
+
+      - name: Build and Upload
+        run: echo "Building Budder Buddy..."
+
+      - name: Notify Lovable (Success)
+        if: success()
+        run: |
+          curl -X POST https://your-lovable-project-url.lovable.app/functions/v1/build-webhook \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer ${{ secrets.BUILD_WEBHOOK_SECRET }}" \
+          -d '{"build_id": "${{ github.event.client_payload.build_id }}", "status": "completed"}'
