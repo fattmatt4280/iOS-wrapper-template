@@ -20,7 +20,7 @@ jobs:
           ruby-version: '3.2'
           bundler-cache: true
 
-      - ame: Build and Upload iOS no App
+      - name: Build and Upload iOS no App
         run: |
             bundle install
             bundle exec fastlane beta
